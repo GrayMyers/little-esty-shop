@@ -1,0 +1,10 @@
+<h1>My Bulk Discounts</h1>
+
+<ul>
+  <% @discounts.each do |discount| %>
+    <li id="discount-<%= discount.id %>">
+      <p>Item Threshold: <%= discount.item_quantity %></p>
+      <p>Percent Off: <%= discount.percent_off %></p>
+    </li>
+  <% end %>
+</ul>
