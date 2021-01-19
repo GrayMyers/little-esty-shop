@@ -32,6 +32,18 @@ describe "merchant bulk discounts index page" do
     expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant.id))
   end
 
+  it "has a link to delete the discount next to each discount which disables it" do
+    @discounts.each do |discount|
+      within("#discount-#{discount.id}") do
+        click_on "Delete Discount"
+      end
+    end
+
+    @not_discounts.each do |discount|
+      expect(page).to_not have_css("#discount-#{discount.id}")
+    end
+  end
+
   it "does not have discounts for other merchants" do
     @not_discounts.each do |discount|
       expect(page).to_not have_css("#discount-#{discount.id}")
