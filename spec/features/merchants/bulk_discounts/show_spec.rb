@@ -12,4 +12,9 @@ describe "merchant bulk discount show page" do
       expect(page).to have_content(@discount.item_quantity)
     end
   end
+
+  it "has a link to edit the discount's properties" do
+    click_on "Edit Discount"
+    expect(current_path).to eq(edit_merchant_bulk_discount_path(@merchant.id,@discount.id))
+  end
 end
