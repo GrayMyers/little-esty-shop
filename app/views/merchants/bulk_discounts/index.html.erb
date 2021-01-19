@@ -6,7 +6,7 @@
       <p><%= link_to "See Details", merchant_bulk_discount_path(params[:merchant_id],discount.id) %></p>
       <p>Item Threshold: <%= discount.item_quantity %></p>
       <p>Percent Off: <%= discount.percent_off %></p>
-      <p><%= link_to "Delete Discount", method: "delete", url: merchant_bulk_discount_path(params[:merchant_id],discount.id) %></p>
+      <p><%= link_to "Delete Discount", merchant_bulk_discount_path(params[:merchant_id],discount.id), method: "delete" %></p>
     </li>
   <% end %>
 </ul>
