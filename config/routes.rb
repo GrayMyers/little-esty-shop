@@ -9,7 +9,7 @@ Rails.application.routes.draw do
       resources :items, except: [:destroy], shallow: true
       resources :invoices, only: [:index, :show]
       resources :invoice_items, only: [:update]
-      resources :bulk_discounts, only: [:index, :show, :create, :new]
+      resources :bulk_discounts
     end
   end
 
