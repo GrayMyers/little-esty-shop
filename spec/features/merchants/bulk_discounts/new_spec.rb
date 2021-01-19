@@ -17,10 +17,9 @@ describe "bulk discount creation page" do
     fill_in "bulk_discount_item_quantity", with: ""
     fill_in "bulk_discount_percent_off", with: 50
     click_on "Create Discount"
-    expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant.id))
 
     within "#flash-messages" do
-      expect(page).to have_content("Item Quantity can't be blank")
+      expect(page).to have_content("Item quantity can't be blank")
     end
   end
 end
