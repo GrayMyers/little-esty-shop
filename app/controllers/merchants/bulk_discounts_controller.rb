@@ -1,7 +1,7 @@
 class Merchants::BulkDiscountsController < ApplicationController
   def index
     merchant = Merchant.find(params[:merchant_id])
-    @discounts = merchant.bulk_discounts
+    @discounts = merchant.bulk_discounts.active
   end
 
   def show
@@ -23,8 +23,16 @@ class Merchants::BulkDiscountsController < ApplicationController
       render "new"
     end
   end
-end
 
-def discount_params
-  params.require(:bulk_discount).permit(:percent_off, :item_quantity).merge(merchant_id: params[:merchant_id])
+  def destroy
+    @discount = BulkDiscount.find(params[:id])
+    @discount.disable
+    redirect_to merchant_bulk_discounts_path(params[:merchant_id])
+  end
+
+  private
+
+  def discount_params
+    params.require(:bulk_discount).permit(:percent_off, :item_quantity).merge(merchant_id: params[:merchant_id])
+  end
 end
