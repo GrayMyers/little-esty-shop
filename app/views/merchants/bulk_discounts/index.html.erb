@@ -1,5 +1,5 @@
 <h1>My Bulk Discounts</h1>
-
+<%= link_to "New Discount", new_merchant_bulk_discount_path(params[:merchant_id]) %>
 <ul>
   <% @discounts.each do |discount| %>
     <li id="discount-<%= discount.id %>">
