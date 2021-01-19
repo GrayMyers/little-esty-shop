@@ -2,7 +2,8 @@ require "rails_helper"
 
 describe BulkDiscount, type: :model do
   describe "relations" do
-    it {should have_many :invoice_items}
+    it {should have_many :discount_items}
+    it {should have_many(:invoice_items).through(:discount_items)}
     it {should belong_to :merchant}
   end
 
