@@ -9,11 +9,12 @@ Rails.application.routes.draw do
       resources :items, except: [:destroy], shallow: true
       resources :invoices, only: [:index, :show]
       resources :invoice_items, only: [:update]
+      resources :bulk_discounts, only: [:index]
     end
   end
 
-  get '/admin', to: 'admins#dashboard' 
-  namespace :admin, shallow: true do 
+  get '/admin', to: 'admins#dashboard'
+  namespace :admin, shallow: true do
     resources :merchants
     resources :invoices, only: [:index, :show, :update]
   end
