@@ -12,4 +12,19 @@ class Merchants::BulkDiscountsController < ApplicationController
     @merchant = Merchant.find(params[:merchant_id])
     @discount = BulkDiscount.new
   end
+
+  def create
+    @discount = BulkDiscount.new(discount_params)
+    if @discount.save
+      redirect_to merchant_bulk_discounts_path(params[:merchant_id])
+    else
+      flash.alert = @discount.errors.full_messages
+      @merchant = Merchant.find(params[:merchant_id])
+      render "new"
+    end
+  end
+end
+
+def discount_params
+  params.require(:bulk_discount).permit(:percent_off, :item_quantity).merge(merchant_id: params[:merchant_id])
 end
