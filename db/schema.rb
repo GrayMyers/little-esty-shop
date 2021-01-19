@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_19_201921) do
+ActiveRecord::Schema.define(version: 2021_01_19_211521) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,17 +30,6 @@ ActiveRecord::Schema.define(version: 2021_01_19_201921) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "address"
-  end
-
-  create_table "discount_items", force: :cascade do |t|
-    t.bigint "bulk_discount_id"
-    t.bigint "invoice_item_id"
-    t.integer "item_quantity"
-    t.integer "percent_off"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["bulk_discount_id"], name: "index_discount_items_on_bulk_discount_id"
-    t.index ["invoice_item_id"], name: "index_discount_items_on_invoice_item_id"
   end
 
   create_table "invoice_items", force: :cascade do |t|
@@ -94,8 +83,6 @@ ActiveRecord::Schema.define(version: 2021_01_19_201921) do
   end
 
   add_foreign_key "bulk_discounts", "merchants"
-  add_foreign_key "discount_items", "bulk_discounts"
-  add_foreign_key "discount_items", "invoice_items"
   add_foreign_key "invoice_items", "invoices"
   add_foreign_key "invoice_items", "items"
   add_foreign_key "invoices", "customers"

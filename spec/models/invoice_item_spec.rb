@@ -8,8 +8,6 @@ describe InvoiceItem, type: :model do
   describe "relations" do
     it {should belong_to :invoice}
     it {should belong_to :item}
-    it {should have_many :discount_items}
-    it {should have_many(:bulk_discounts).through(:discount_items)}
   end
 
   describe "class methods" do
