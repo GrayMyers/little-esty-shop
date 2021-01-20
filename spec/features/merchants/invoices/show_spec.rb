@@ -43,17 +43,17 @@ RSpec.describe "Merchant Invoices show" do
       discount1 = create(:bulk_discount, merchant: merchant1, percent_off: 50, item_quantity: 3)
       discount2 = create(:bulk_discount, merchant: merchant1, percent_off: 100, item_quantity: 10000)
       items = create_list(:item, 5, merchant: merchant1, unit_price: 1)
-
+      invoice_items = []
       customer = create(:customer, first_name: "Linda", last_name: "Mayhew")
 
       invoice = create(:invoice, merchant: merchant1, customer: customer)
 
       items[0..2].each do |item|
-        create(:invoice_item, item: item, invoice: invoice, quantity: 10, unit_price: 1)
+        invoice_items << create(:invoice_item, item: item, invoice: invoice, quantity: 10, unit_price: 1, bulk_discount_id: discount1.id)
       end
 
       items[3..4].each do |item|
-        create(:invoice_item, item: item, invoice: invoice, quantity: 1, unit_price: 1)
+        invoice_items << create(:invoice_item, item: item, invoice: invoice, quantity: 1, unit_price: 1, bulk_discount_id: nil)
       end
       # create(:transaction, invoice: invoice, result: 0)
 
@@ -66,21 +66,21 @@ RSpec.describe "Merchant Invoices show" do
           expect(page).to have_content("quantity: #{invoice_item.quantity}")
           expect(page).to have_content("unit price: #{invoice_item.unit_price}")
         end
-
-        items[0..2].each do |invoice_item|
-          within("#item-#{invoice_item.id}")
-            click_on "See Discount"
-            expect(current_path).to eq(merchant_bulk_discount_path(merchant1.id, discount1.id))
-            visit merchant_invoice_path(merchant1, invoice)
-          end
-        end
-
-        items[3..4].each do |invoice_item|
-          within("#item-#{invoice_item.id}") do
-            expect(page).to have_no_content("See Discount")
-          end
+      end
+      invoice_items[0..2].each do |invoice_item|
+        within("#item-#{invoice_item.id}") do
+          click_on "See Discount"
+          expect(current_path).to eq(merchant_bulk_discount_path(merchant1.id, discount1.id))
+          visit merchant_invoice_path(merchant1, invoice)
         end
       end
+
+      invoice_items[3..4].each do |invoice_item|
+        within("#item-#{invoice_item.id}") do
+          expect(page).to have_no_content("See Discount")
+        end
+      end
+    end
 
     it "can alter invoice_item status" do
       merchant1 = create(:merchant)
