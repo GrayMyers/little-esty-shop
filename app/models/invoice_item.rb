@@ -11,8 +11,8 @@ class InvoiceItem < ApplicationRecord
     sum('quantity * unit_price * percent_paid / 100')
   end
 
-  def self.set_discounts
-    all.each do |invoice_item|
+  def self.set_discounts #this could theoretically be done using activerecord but it would likely be horrendous
+    all.each do |invoice_item| #and not within the scope of this project to do that, as it is an extension.
       discount = invoice_item.best_discount
       if discount then
           invoice_item.update(
