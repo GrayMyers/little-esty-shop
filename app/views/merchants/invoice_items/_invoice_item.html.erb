@@ -1,8 +1,13 @@
+<section id="item-<%= invoice_item.id %>">
 <h4><%= invoice_item.item_name %></h4>
 <h5>quantity: <%= invoice_item.quantity%>
 unit price: <%= invoice_item.unit_price %>
 status: <%= render partial: "status", locals: {
-  object: invoice_item, 
-  text: "Update Item Status!", 
+  object: invoice_item,
+  text: "Update Item Status!",
   options: ["pending", "packaged", "shipped"]} %>
 </h5>
+<% if invoice_item.bulk_discount_id %>
+  <%= link_to "See Discount", merchant_bulk_discount_path(@merchant.id,invoice_item.bulk_discount_id) %>
+<% end %>
+</section>

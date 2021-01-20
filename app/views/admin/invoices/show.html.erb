@@ -1,5 +1,9 @@
 <h1> admin invoice show </h1>
 
+<section id="invoice-revenue">
+  <h3>Total Revenue: $<%= @invoice.invoice_items.invoice_amount %></h3>
+</section>
+
 <section id="invoice-information">
   <ul>
     <li>invoice id: <%= @invoice.id %></li>

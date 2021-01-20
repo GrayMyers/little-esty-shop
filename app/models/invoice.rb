@@ -26,6 +26,6 @@ class Invoice < ApplicationRecord
   def self.total_revenue
     joins(:transactions, :invoice_items)
     .where(transactions: {result: 0})
-    .sum("quantity * unit_price")
+    .sum("quantity * unit_price * percent_paid / 100")
   end
 end

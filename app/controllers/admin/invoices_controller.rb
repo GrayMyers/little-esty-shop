@@ -10,6 +10,9 @@ class Admin::InvoicesController < ApplicationController
   def update
     invoice = Invoice.find(params[:id])
     invoice.update(invoice_params)
+    if invoice.status == "completed"
+      invoice.invoice_items.set_discounts
+    end
     redirect_to admin_invoice_path(invoice)
   end
 

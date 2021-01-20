@@ -25,6 +25,14 @@ RSpec.describe "Merchant Dashboard" do
 
       expect(current_path).to eq(merchant_invoices_path(merchant))
     end
+
+    it "link to merchant's discounts index" do
+      visit dashboard_merchant_path(merchant)
+
+      click_link "My Discounts"
+
+      expect(current_path).to eq(merchant_bulk_discounts_path(merchant))
+    end
   end
 
   describe "has section for" do

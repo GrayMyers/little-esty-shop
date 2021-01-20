@@ -7,7 +7,7 @@ class ApiSearch
   def git_data
     if !@data or data_expired?
       @retrieved_time = DateTime.now
-      @data = GithubService.new('https://api.github.com/repos/cunninghamge/little-esty-shop').get_data
+      @data = GithubService.new('https://api.github.com/repos/GrayMyers/little-esty-shop').get_data
     else
       @data
     end
