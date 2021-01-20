@@ -18,6 +18,13 @@ describe InvoiceItem, type: :model do
       ii3 = FactoryBot.create(:invoice_item, invoice_id:invoice.id, quantity: 5, unit_price: 5) #25
 
       expect(invoice.invoice_items.invoice_amount).to eq(15+20+25)
+
+      invoice = FactoryBot.create(:invoice)
+      ii1 = FactoryBot.create(:invoice_item, invoice_id:invoice.id, quantity: 3, unit_price: 50, percent_paid: 50) #75
+      ii2 = FactoryBot.create(:invoice_item, invoice_id:invoice.id, quantity: 4, unit_price: 50, percent_paid: 50) #100
+      ii3 = FactoryBot.create(:invoice_item, invoice_id:invoice.id, quantity: 5, unit_price: 50, percent_paid: 50) #125
+
+      expect(invoice.invoice_items.invoice_amount).to eq(300)
     end
   end
 

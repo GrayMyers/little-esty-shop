@@ -8,6 +8,6 @@ class InvoiceItem < ApplicationRecord
   delegate :name, to: :item, prefix: true
 
   def self.invoice_amount
-    sum('quantity * unit_price')
+    sum('quantity * unit_price * percent_paid / 100')
   end
 end

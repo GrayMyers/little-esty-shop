@@ -58,6 +58,22 @@ describe Invoice, type: :model do
       # create(:transaction, invoice: invoice, result: 0)
 
       expect(invoice.invoice_amount).to eq(25)
+
+
+      merchant1 = create(:merchant)
+      discount = create(:bulk_discount, merchant: merchant1, percent_off: 50)
+      items = create_list(:item, 5, merchant: merchant1, unit_price: 10)
+
+      customer = create(:customer, first_name: "Linda", last_name: "Mayhew")
+
+      invoice = create(:invoice, merchant: merchant1, customer: customer)
+
+      items.each do |item|
+        create(:invoice_item, item: item, invoice: invoice, quantity: 5, unit_price: 10, percent_paid: 50)
+      end
+
+
+      expect(invoice.invoice_amount).to eq(125)
     end
   end
 end
