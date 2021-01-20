@@ -72,13 +72,46 @@ RSpec.describe "admin invoices show page" do
         expect(page).to have_selector(:id, 'status', text: @invoice.status)
       end
     end
-    it "can select a new status and update the status" do
+    it "can select a new status and update the status and doing so sets discounts" do
+      merchant1 = create(:merchant)
+      discount1 = create(:bulk_discount, merchant: merchant1, percent_off: 100, item_quantity: 5)
+      discount2 = create(:bulk_discount, merchant: merchant1, percent_off: 50, item_quantity: 1)
+      discount3 = create(:bulk_discount, merchant: merchant1, percent_off: 50, item_quantity: 1) #this will never be applied
+      items = create_list(:item, 5, merchant: merchant1, unit_price: 1)
+      invoice_items = []
+      customer = create(:customer, first_name: "Linda", last_name: "Mayhew")
+
+      invoice = create(:invoice, merchant: merchant1, customer: customer)
+
+      items[0..2].each do |item| #these are not set manually, so these items having a discount means it was done automatically.
+        invoice_items << create(:invoice_item, item: item, invoice: invoice, quantity: 10, unit_price: 10, bulk_discount_id: nil)
+      end
+
+      items[3..4].each do |item|
+        invoice_items << create(:invoice_item, item: item, invoice: invoice, quantity: 2, unit_price: 10, bulk_discount_id: nil)
+      end
+
+      visit(admin_invoice_path(invoice.id))
+
       within("#invoice-information") do
         expect(page).to have_select('status', selected: @invoice.status, options: ['in progress', 'completed', 'cancelled'])
-        page.select('completed', from: 'status')
+        page.select('cancelled', from: 'status')
         click_on 'Save'
+
         expect(current_path).to eq(admin_invoice_path(@invoice.id))
         expect(page).to have_content('completed')
+
+        page.select('completed', from: 'status') #setting to completed finalizes discounts
+        click_on 'Save'
+
+        invoice_items[0..2].each do |invoice_item|
+          expect(invoice_item.discount_id).to eq(discount1.id)
+        end
+
+        invoice_items[3..4].each do |invoice_item|
+          expect(invoice_item.discount_id).to eq(discount2.id)
+        end
+
       end
     end
   end
