@@ -72,7 +72,7 @@ RSpec.describe "admin invoices show page" do
         expect(page).to have_selector(:id, 'status', text: @invoice.status)
       end
     end
-    it "can select a new status and update the status and doing so sets discounts" do
+    it "can select a new status and update the status" do
       merchant1 = create(:merchant)
       discount1 = create(:bulk_discount, merchant: merchant1, percent_off: 100, item_quantity: 5)
       discount2 = create(:bulk_discount, merchant: merchant1, percent_off: 50, item_quantity: 1)
@@ -94,24 +94,20 @@ RSpec.describe "admin invoices show page" do
       visit(admin_invoice_path(invoice.id))
 
       within("#invoice-information") do
-        expect(page).to have_select('status', selected: @invoice.status, options: ['in progress', 'completed', 'cancelled'])
+        expect(page).to have_select('status', selected: invoice.status, options: ['in progress', 'completed', 'cancelled'])
         page.select('cancelled', from: 'status')
         click_on 'Save'
 
-        expect(current_path).to eq(admin_invoice_path(@invoice.id))
+        expect(current_path).to eq(admin_invoice_path(invoice.id))
         expect(page).to have_content('completed')
 
         page.select('completed', from: 'status') #setting to completed finalizes discounts
         click_on 'Save'
 
-        invoice_items[0..2].each do |invoice_item|
-          expect(invoice_item.discount_id).to eq(discount1.id)
+        invoice_items.each do |async_invoice_item|
+          invoice_item = InvoiceItem.find(async_invoice_item.id)
+          expect(invoice_item.bulk_discount_id).to eq(invoice_item.best_discount.id)
         end
-
-        invoice_items[3..4].each do |invoice_item|
-          expect(invoice_item.discount_id).to eq(discount2.id)
-        end
-
       end
     end
   end
